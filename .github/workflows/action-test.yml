@@ -1,9 +1,9 @@
-# This is a basic workflow to help you get started with Actions
+# Test Workflow (Playground Action) 
 
 name: Hello Actions
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
+# Event bzw. Trigger wann der Workflow ausgeführt werden soll
+# Push on main bzw. Pull Request closed
 on:
   push:
     branches: 
@@ -13,31 +13,33 @@ on:
     types: [closed]
   
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# Workflow mit mehr als einen Jobs
 jobs:
-  # This workflow contains a single job called "build"
+  #   Single Job mit der Id = "build"
   build:
-    # The type of runner that the job will run on
+    # Runner mit dem der Job ausgeführt wird
     runs-on: ubuntu-latest
     env:
       name: Hallo Github Action
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    # Steps die eine Sequenz von Aufgaben beinhalten
     steps:
 
-    # Runs a single command using the runners shell
+    # Führ ein Shell Kommando aus. (Runner Shell)
     - name: Run a one-line script
       run: |
            echo Hello, $name!
            echo Actor: ${{github.actor}}
            echo Commited By: ${{github.event.commits[0].author.name}}
 
+  #   Single Job mit der Id = "weather"
   weather:
     runs-on: ubuntu-latest
     steps:
     - name: Current Weather
       run: curl "https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m"
-  
+
+  #   Single Job mit der Id = "dump"
   dump:
     runs-on: ubuntu-latest
     steps:
@@ -47,18 +49,14 @@ jobs:
         run: |
           echo "$GITHUB_CONTEXT"
 
-
+  #   Single Job mit der Id = "pull_request_only"
   pull_request_only:
-    # The type of runner that the job will run on
+    
     runs-on: ubuntu-latest
-    if: github.event_name=='pull_request'
-    needs: build
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    if: github.event_name=='pull_request' # Wird nur bei einem pull_request ausgeführt
+    needs: build #Wird erst ausgeführt wenn Job mit der Id build lief  
     steps:
-
-
-    # Runs a set of commands using the runners shell
+    # Führt Kommandos auf der Runner Shell aus:
     - name: Run a multi-line script
       run: |
         echo Add other actions to build,
