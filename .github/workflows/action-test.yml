@@ -35,21 +35,18 @@ jobs:
   weather:
     runs-on: ubuntu-latest
     env:
-      location: '28.550,-81.40'
-      lang: en
-      units: us
-      exclude:  'minutely,hourly,daily,alerts,flags'
-      dark_sky_secret:  ${{secrets.dark_sky}}
+      latitude: '52.52'
+      longitude: '13.41'
     steps:
     - name: Current Weather
-      run: curl -s --url https://api.darksky.net/forecast/$dark_sky_secret/$location?lang=$lang&units=$units&exclude=$exclude
+      run: curl -s --url curl https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m
   
   dump:
     runs-on: ubuntu-16.04
     steps:
-      - name: Dump GitHub context
+      - name: Dump GitHub Event Name
         env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
+          GITHUB_CONTEXT: ${{ toJson(github.event_name) }}
         run: |
           echo "$GITHUB_CONTEXT"
 
