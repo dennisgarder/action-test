@@ -1,0 +1,71 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Hello Actions
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: 
+      - master
+
+  pull_request:
+    types: [closed]
+  
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    env:
+      name: Ralph S
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+
+    # Runs a single command using the runners shell
+    - name: Run a one-line script
+      run: |
+           echo Hello, $name!
+           echo Actor: ${{github.actor}}
+           echo Commited By: ${{github.event.commits[0].author.name}}
+
+  weather:
+    runs-on: ubuntu-latest
+    env:
+      location: '28.550,-81.40'
+      lang: en
+      units: us
+      exclude:  'minutely,hourly,daily,alerts,flags'
+      dark_sky_secret:  ${{secrets.dark_sky}}
+    steps:
+    - name: Current Weather
+      run: curl -s --url https://api.darksky.net/forecast/$dark_sky_secret/$location?lang=$lang&units=$units&exclude=$exclude
+  
+  dump:
+    runs-on: ubuntu-16.04
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
+
+
+  pull_request_only:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    if: github.event_name=='pull_request'
+    needs: build
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+
+
+    # Runs a set of commands using the runners shell
+    - name: Run a multi-line script
+      run: |
+        echo Add other actions to build,
+        echo test, and deploy your project.
