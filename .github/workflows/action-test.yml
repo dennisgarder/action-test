@@ -36,14 +36,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Current Weather
-      run: curl -s --url curl https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m
+      run: curl "https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m"
   
   dump:
     runs-on: ubuntu-latest
     steps:
-      - name: Dump GitHub Event Name
+      - name: Dump GitHub Context
         env:
-          GITHUB_CONTEXT: ${{ toJson(github.event_name) }}
+          GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
           echo "$GITHUB_CONTEXT"
 
